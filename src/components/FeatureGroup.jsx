@@ -8,7 +8,8 @@ function FeatureCard({ feature, checked, copy, onToggle }) {
       data-tier={feature.tier}
       onClick={() => onToggle(feature.id)}
     >
-      <span className="feat-check" aria-hidden="true"><i className="ti ti-check" /></span>
+      <span className="feat-toggle" aria-hidden="true" />
+      <span className="feat-tier-dot" aria-hidden="true" />
       <span className="feat-text">
         <span className="feat-name">
           {feature.name}
@@ -46,14 +47,14 @@ function TierColumn({ tier, features, selectedSet, copy, onToggle }) {
   );
 }
 
-export function FeatureGroup({ group, tiers, copy, selectedSet, collapsed, onToggleFeature, onToggleGroup, onSelectAll }) {
+export function FeatureGroup({ group, index = 0, tiers, copy, selectedSet, collapsed, onToggleFeature, onToggleGroup, onSelectAll }) {
   const selectedCount = group.features.filter((feature) => selectedSet.has(feature.id)).length;
   const allSelected = selectedCount === group.features.length;
   const isOpen = !collapsed;
   const selectLabel = allSelected ? copy.common.deselectAll : copy.common.selectAll;
 
   return (
-    <article className="group-card" role="listitem">
+    <article className={`group-card${isOpen ? " is-open" : " is-closed"}`} role="listitem" style={{ "--group-index": index }}>
       <div className="group-head" onClick={() => onToggleGroup(group.id)} role="button" tabIndex={0} onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
@@ -80,12 +81,12 @@ export function FeatureGroup({ group, tiers, copy, selectedSet, collapsed, onTog
           >
             {selectLabel}
           </button>
-          <i className={`ti ti-chevron-down gchev${isOpen ? " open" : ""}`} aria-hidden="true" />
+          <span className={`group-toggle${isOpen ? " open" : ""}`} aria-hidden="true" />
         </div>
       </div>
 
-      {isOpen && (
-        <div className="feats">
+      <div className={`feats collapse-panel${isOpen ? " open" : ""}`} aria-hidden={!isOpen} inert={collapsed ? true : undefined}>
+        <div className="feats-inner">
           <div className="feats-cols">
             {tiers.map((tier) => (
               <TierColumn
@@ -99,7 +100,7 @@ export function FeatureGroup({ group, tiers, copy, selectedSet, collapsed, onTog
             ))}
           </div>
         </div>
-      )}
+      </div>
     </article>
   );
 }

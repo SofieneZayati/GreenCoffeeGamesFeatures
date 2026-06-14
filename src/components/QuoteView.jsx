@@ -1,5 +1,6 @@
 import { getCommercialTiers } from "../data/i18n";
 import { formatDate, getProposalGroups } from "../utils/proposals";
+import { CONTACT_SIGNATURE } from "../data/contact";
 
 const TIER_ORDER = ["starter", "advanced", "premium"];
 
@@ -129,9 +130,19 @@ export function QuoteView({ proposal, language, copy, onBack }) {
           </div>
         </section>
 
-        <footer className="quote-footer">
-          <span>{copy.quote.footerLeft}</span>
-          <span>{copy.quote.footerRight}</span>
+        <footer className="quote-footer quote-footer-with-contact">
+          <div className="quote-footer-copy">
+            <span>{copy.quote.footerLeft}</span>
+            <span>{copy.quote.footerRight}</span>
+          </div>
+          <div className="quote-contact-card" aria-label="Prepared by contact details">
+            <span className="quote-contact-kicker">Prepared by</span>
+            <strong>{CONTACT_SIGNATURE.name}</strong>
+            <div className="quote-contact-lines">
+              <span><b>Phone</b> {CONTACT_SIGNATURE.phone}</span>
+              <span><b>Email</b> {CONTACT_SIGNATURE.email}</span>
+            </div>
+          </div>
         </footer>
       </main>
     </div>

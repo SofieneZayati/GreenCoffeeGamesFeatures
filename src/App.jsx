@@ -8,6 +8,7 @@ import { QuoteView } from "./components/QuoteView";
 import { TopBar } from "./components/TopBar";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { createProposal, STORAGE_KEYS } from "./utils/proposals";
+import { CONTACT_SIGNATURE } from "./data/contact";
 import "./styles.css";
 
 function Toast({ message }) {
@@ -17,13 +18,14 @@ function Toast({ message }) {
 export default function App() {
   const [selectedIds, setSelectedIds] = useLocalStorage(STORAGE_KEYS.currentSelection, []);
   const [proposals, setProposals] = useLocalStorage(STORAGE_KEYS.savedProposals, []);
-  const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.theme, "dark");
+  const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.theme, "light");
   const [language, setLanguage] = useLocalStorage(STORAGE_KEYS.language, "en");
   const [proposalName, setProposalName] = useState("");
   const [collapsedGroupIds, setCollapsedGroupIds] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [activeQuote, setActiveQuote] = useState(null);
+  const [languageSwitching, setLanguageSwitching] = useState(false);
 
   const safeLanguage = normalizeLanguage(language);
   const copy = useMemo(() => getCopy(safeLanguage), [safeLanguage]);
@@ -57,7 +59,15 @@ export default function App() {
   }
 
   function changeLanguage(nextLanguage) {
-    setLanguage(normalizeLanguage(nextLanguage));
+    const normalizedLanguage = normalizeLanguage(nextLanguage);
+    if (normalizedLanguage === safeLanguage) return;
+
+    setLanguageSwitching(false);
+    window.requestAnimationFrame(() => {
+      setLanguage(normalizedLanguage);
+      setLanguageSwitching(true);
+      window.setTimeout(() => setLanguageSwitching(false), 520);
+    });
   }
 
   function toggleFeature(featureId) {
@@ -142,22 +152,44 @@ export default function App() {
           onChangeLanguage={changeLanguage}
           onOpenDrawer={() => setDrawerOpen(true)}
         />
-        <Intro copy={copy} />
-        <div className="left" role="list">
-          {translatedGroups.map((group) => (
-            <FeatureGroup
-              key={group.id}
-              group={group}
-              tiers={translatedTiers}
-              copy={copy}
-              selectedSet={selectedSet}
-              collapsed={collapsedSet.has(group.id)}
-              onToggleFeature={toggleFeature}
-              onToggleGroup={toggleGroup}
-              onSelectAll={selectAllInGroup}
-            />
-          ))}
-        </div>
+        <section className={`language-stage${languageSwitching ? " is-switching" : ""}`} data-language={safeLanguage}>
+          <Intro copy={copy} />
+          <div className="left" role="list">
+            {translatedGroups.map((group, index) => (
+              <FeatureGroup
+                key={group.id}
+                group={group}
+                index={index}
+                tiers={translatedTiers}
+                copy={copy}
+                selectedSet={selectedSet}
+                collapsed={collapsedSet.has(group.id)}
+                onToggleFeature={toggleFeature}
+                onToggleGroup={toggleGroup}
+                onSelectAll={selectAllInGroup}
+              />
+            ))}
+          </div>
+          <footer className="creator-credit" aria-label="Project contact">
+            <div className="creator-credit-mark" aria-hidden="true">
+              <i className="ti ti-cup" />
+            </div>
+            <div className="creator-credit-main">
+              <span className="creator-credit-label">Prepared by</span>
+              <strong>{CONTACT_SIGNATURE.name}</strong>
+            </div>
+            <div className="creator-credit-contact">
+              <a href={`tel:${CONTACT_SIGNATURE.phone.replaceAll(" ", "")}`}>
+                <span>Phone</span>
+                {CONTACT_SIGNATURE.phone}
+              </a>
+              <a href={`mailto:${CONTACT_SIGNATURE.email}`}>
+                <span>Email</span>
+                {CONTACT_SIGNATURE.email}
+              </a>
+            </div>
+          </footer>
+        </section>
       </main>
       <Drawer
         open={drawerOpen}
