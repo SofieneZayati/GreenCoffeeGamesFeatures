@@ -59,8 +59,7 @@ export const GROUPS = [
     id: "ordering", label: "Ordering", icon: "ti-shopping-cart",
     features: [
       { id: "table_setup", tier: "advanced", name: "Table setup", desc: "Create table numbers, capacities, active status and QR links", critical: true },
-      { id: "qr_order", tier: "advanced", name: "Per-table QR codes", desc: "Each table has its own QR so the system identifies exactly where the order came from", critical: true },
-      { id: "table_session_qr", tier: "advanced", name: "Session-locked QR ordering", desc: "Each QR scan opens a time-limited table session to reduce fake or remote orders from outside the café", critical: true, isNew: true },
+      { id: "qr_order", tier: "advanced", name: "Smart QR per table", desc: "System knows which table ordered automatically", critical: true },
       { id: "inseat", tier: "advanced", name: "In-seat ordering", desc: "Full order flow without leaving the table" },
       { id: "staff_dash", tier: "advanced", name: "Staff order dashboard", desc: "Baristas see and manage incoming orders in real time", critical: true },
       { id: "kds", tier: "premium", name: "Kitchen display system", desc: "Dedicated barista screen with queue, priorities and item status" },
@@ -80,7 +79,6 @@ export const GROUPS = [
       { id: "points", tier: "advanced", name: "Points system", desc: "1 TND = 1 point, redeemable for free products" },
       { id: "coupons", tier: "advanced", name: "Coupon & promo codes", desc: "WELCOME10, SUMMER25 and custom codes" },
       { id: "happyhour", tier: "advanced", name: "Happy hour engine", desc: "Auto discounts by time slot, for example 14:00 – 17:00" },
-      { id: "campaign_broadcasts", tier: "premium", name: "WhatsApp & email campaigns", desc: "Send promos, coupons and happy-hour announcements to selected customer segments by WhatsApp or email", isNew: true },
       { id: "receipt_loyalty", tier: "advanced", name: "Receipt QR loyalty", desc: "Physical receipt QR scan to earn loyalty points" },
       { id: "tiers", tier: "premium", name: "Customer tiers", desc: "Bronze → Silver → Gold → VIP with faster earning" },
       { id: "wallet", tier: "premium", name: "Digital wallet", desc: "Store coupons, free drinks and reward vouchers" },

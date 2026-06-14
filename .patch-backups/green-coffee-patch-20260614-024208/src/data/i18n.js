@@ -15,7 +15,6 @@ export const UI_COPY = {
       switchToDark: "Dark mode",
       languageLabel: "Language",
       summary: "Open feature selection summary",
-      summaryText: "Summary",
     },
     topbar: {
       subtitle: "Green Coffee Games feature builder",
@@ -150,7 +149,6 @@ export const UI_COPY = {
       switchToDark: "Mode sombre",
       languageLabel: "Langue",
       summary: "Ouvrir le résumé de sélection",
-      summaryText: "Résumé",
     },
     topbar: {
       subtitle: "Configurateur Green Coffee Games",
@@ -321,8 +319,7 @@ const FR_FEATURES = {
   profiles: { name: "Profils utilisateurs", desc: "Profil, historique des commandes, préférences enregistrées et coordonnées" },
   favorites: { name: "Recommande en un clic", desc: "Enregistrer les commandes favorites et les recommander instantanément" },
   table_setup: { name: "Configuration des tables", desc: "Créer les numéros, capacités, statut actif et liens QR des tables" },
-  qr_order: { name: "QR par table", desc: "Chaque table possède son propre QR pour identifier automatiquement l’origine de la commande" },
-  table_session_qr: { name: "Session QR sécurisée à table", desc: "Chaque scan ouvre une session limitée liée à la table afin d’éviter les commandes à distance ou hors présence" },
+  qr_order: { name: "QR intelligent par table", desc: "Le système identifie automatiquement la table qui commande" },
   inseat: { name: "Commande à table", desc: "Flux complet de commande sans quitter la table" },
   staff_dash: { name: "Tableau de bord staff", desc: "Les baristas voient et gèrent les commandes entrantes en temps réel" },
   kds: { name: "Écran cuisine/barista", desc: "Écran dédié avec file d’attente, priorités et statut des articles" },
@@ -332,7 +329,6 @@ const FR_FEATURES = {
   points: { name: "Système de points", desc: "1 TND = 1 point, échangeable contre des produits gratuits" },
   coupons: { name: "Coupons & codes promo", desc: "WELCOME10, SUMMER25 et codes personnalisés" },
   happyhour: { name: "Moteur happy hour", desc: "Réductions automatiques par créneau horaire, par exemple 14:00 – 17:00" },
-  campaign_broadcasts: { name: "Campagnes WhatsApp & e-mail", desc: "Envoyer promos, coupons et happy hours aux clients par segment via WhatsApp ou e-mail" },
   receipt_loyalty: { name: "QR fidélité sur reçu", desc: "Scan du QR sur reçu physique pour gagner des points fidélité" },
   tiers: { name: "Niveaux clients", desc: "Bronze → Silver → Gold → VIP avec gain accéléré" },
   wallet: { name: "Wallet digital", desc: "Stocker coupons, boissons gratuites et bons de récompense" },

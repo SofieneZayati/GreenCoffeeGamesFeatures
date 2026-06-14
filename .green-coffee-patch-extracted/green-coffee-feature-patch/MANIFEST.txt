@@ -1,0 +1,13 @@
+Green Coffee Feature Selector patch
+
+Installs:
+- Clearer sidebar Summary button with selected count
+- Session-locked per-table QR ordering feature
+- WhatsApp/email campaigns feature
+- Updated French/English feature text
+- Pinned package dependencies to avoid Vercel/Vite permission issues
+
+Install:
+1) Copy install_patch.py and green-coffee-feature-patch.zip to your project root.
+2) Run: py install_patch.py
+3) Run: npm run build

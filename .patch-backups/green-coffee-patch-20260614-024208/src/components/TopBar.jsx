@@ -61,12 +61,8 @@ export function TopBar({
             </button>
           ))}
         </div>
-        <button className="summary-btn" type="button" onClick={onOpenDrawer} aria-label={copy.controls.summary}>
-          <span className="summary-btn-icon" aria-hidden="true">
-            <i className="ti ti-layout-sidebar-right" />
-          </span>
-          <span className="summary-btn-text">{copy.controls.summaryText}</span>
-          <span className="summary-btn-count" aria-hidden="true">{selectedCount}</span>
+        <button className="icon-btn" type="button" onClick={onOpenDrawer} aria-label={copy.controls.summary}>
+          <i className="ti ti-layout-sidebar-right" aria-hidden="true" />
         </button>
       </div>
     </div>
