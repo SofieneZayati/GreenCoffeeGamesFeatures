@@ -1,19 +1,40 @@
-# Green Coffee Games — React Feature Selector
+# Green Coffee — Corrected Client Feature Selector
 
-This is the React refactor of the original single-file HTML feature selector.
+React/Vite feature selector for Green Coffee. This corrected version is structured for a real client conversation: Starter stays simple, Advanced contains accounts/operations, and Premium is reserved for impressive future add-ons.
 
-## What changed
+## Corrected structure
 
-- The old DOM-heavy script was split into React components.
-- The feature data now lives in `src/data/features.js`.
-- Added the Green Coffee Games logo to the site header and printable PDF view.
-- Added persistent White/Dark mode controls in the top bar.
-- Added EN/FR language tabs with French UI and feature translations.
-- Selection state and saved proposals are handled with React state + localStorage.
-- The old generated-PDF logic is removed.
-- PDF export is now a clean React print screen with a `Print / Save as PDF` button.
-- No jsPDF, no coordinate-based PDF drawing, no popup quote window.
-- The printable PDF summary is pure feature selection: no prices, totals, commercial estimates, or estimated delivery time.
+1. Website & brand
+2. Digital menu & QR menu
+3. Simple reservation & contact
+4. Basic admin menu manager
+5. Customer accounts
+6. Advanced reservation system
+7. Table QR ordering
+8. Staff dashboard & operations
+9. Payments & receipts
+10. Loyalty & promotions
+11. Analytics & reports
+12. Marketing & customer feedback
+13. AI & automation
+14. Security, roles & back office
+15. Launch & service
+
+## Important correction
+
+- Starter reservation is now only a simple request: name, phone, date, time, guests, and note.
+- Anything requiring customer account/login is now Advanced: reservation history, modify/cancel reservation, reminders, and managed reservation calendar.
+- Quote pricing logic is corrected: Advanced is treated as the bigger baseline package, not Starter + Advanced added together.
+
+## Highlights
+
+- Smart preset packages: Launch MVP, QR Ordering, Loyalty Growth, Premium WOW.
+- Search and filter console for quickly finding modules by keyword, tier, core status, or new features.
+- EN/FR mixed-language UI suitable for Tunisian client conversations.
+- White/dark mode with smooth UI transitions.
+- Saved selections stored in browser localStorage.
+- Clean summary drawer with pricing guide and selected feature counts.
+- Quote/PDF view with selected features, commercial lines, starting estimate, realisation, approval area, and scope exclusions.
 
 ## Run locally
 
@@ -22,7 +43,7 @@ npm install
 npm run dev
 ```
 
-Then open the local Vite URL shown in the terminal.
+Then open the Vite URL shown in the terminal.
 
 ## Build for production
 
@@ -31,32 +52,16 @@ npm run build
 npm run preview
 ```
 
-## Project structure
+## Deployment notes
 
-```text
-src/
-  components/
-    Drawer.jsx
-    FeatureGroup.jsx
-    Intro.jsx
-    QuoteView.jsx
-    TopBar.jsx
-  data/
-    features.js
-    i18n.js
-  hooks/
-    useLocalStorage.js
-  utils/
-    proposals.js
-  App.jsx
-  main.jsx
-  styles.css
+Send the client a deployed link, not the source zip. For Vercel/Netlify, upload this clean project without `node_modules`, `.git`, or old `dist` folders. The build command is:
+
+```bash
+npm run build
 ```
 
-## Feature-selection PDF flow
+The output folder is:
 
-1. Select the features.
-2. Open the right summary panel.
-3. Click `Create PDF summary`.
-4. Review the clean feature-selection screen.
-5. Click `Print / Save as PDF` and choose `Save as PDF` in the browser print dialog. The generated PDF contains only the selected features, with no prices and no estimated realisation time.
+```bash
+dist
+```

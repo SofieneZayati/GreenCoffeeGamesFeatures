@@ -50,19 +50,16 @@ export function Drawer({
           <div className="price-card">
             <div className="price-tier sta">{copy.drawer.starterPackage}</div>
             <div className="price-amount">{copy.drawer.starterAmount}<span className="price-currency">{copy.drawer.currency}</span></div>
-            <div className="price-timeline"><i className="ti ti-clock" aria-hidden="true" /> {copy.drawer.starterTimeline}</div>
             <div className="price-note">{copy.drawer.starterNote}</div>
           </div>
           <div className="price-card advanced-card">
             <div className="price-tier adv">{copy.drawer.advancedPackage}</div>
             <div className="price-amount">{copy.drawer.advancedAmount}<span className="price-currency">{copy.drawer.currency}</span></div>
-            <div className="price-timeline"><i className="ti ti-clock" aria-hidden="true" /> {copy.drawer.advancedTimeline}</div>
             <div className="price-note">{copy.drawer.advancedNote}</div>
           </div>
           <div className="price-card premium-card">
             <div className="price-tier pre">{copy.drawer.premiumPackage}</div>
             <div className="price-amount">{copy.drawer.premiumAmount}<span className="price-currency">{copy.drawer.premiumCurrency}</span></div>
-            <div className="price-timeline"><i className="ti ti-clock" aria-hidden="true" /> {copy.drawer.premiumTimeline}</div>
             <div className="price-note">{copy.drawer.premiumNote}</div>
           </div>
           <div className="price-note drawer-note">{copy.drawer.printNote}</div>

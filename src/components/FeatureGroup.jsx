@@ -75,7 +75,7 @@ export function FeatureGroup({ group, index = 0, tiers, copy, selectedSet, colla
             type="button"
             onClick={(event) => {
               event.stopPropagation();
-              onSelectAll(group.id);
+              onSelectAll(group.id, group.features.map((feature) => feature.id));
             }}
             aria-label={`${selectLabel} ${group.label}`}
           >

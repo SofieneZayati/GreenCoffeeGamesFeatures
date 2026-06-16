@@ -1,5 +1,5 @@
 import { getCommercialTiers } from "../data/i18n";
-import { formatDate, getProposalGroups } from "../utils/proposals";
+import { formatDate, getCommercialModel, getProposalGroups } from "../utils/proposals";
 import { CONTACT_SIGNATURE } from "../data/contact";
 
 const TIER_ORDER = ["starter", "advanced", "premium"];
@@ -68,6 +68,7 @@ export function QuoteView({ proposal, language, copy, onBack }) {
   const commercialTiers = getCommercialTiers(language);
   const totalFeatures = groups.reduce((total, group) => total + group.features.length, 0);
   const categoryCount = groups.length;
+  const model = getCommercialModel(proposal, language);
 
   return (
     <div className="quote-screen">
@@ -111,9 +112,37 @@ export function QuoteView({ proposal, language, copy, onBack }) {
           </div>
         </section>
 
-        <section className="quote-metrics feature-metrics">
+        <section className="quote-metrics feature-metrics quote-metrics-rich">
           <div><span>{copy.quote.modules}</span><strong>{totalFeatures}</strong></div>
           <div><span>{copy.quote.categories}</span><strong>{categoryCount}</strong></div>
+        </section>
+
+        <section className="quote-section quote-commercial compact-section">
+          <h3>{copy.quote.commercialLines}</h3>
+          <table className="quote-table commercial-table">
+            <thead>
+              <tr>
+                <th>{copy.quote.package}</th>
+                <th>{copy.quote.modules}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {model.selectedTiers.map((tier) => (
+                <tr key={tier.key}>
+                  <th scope="row">{tier.label}</th>
+                  <td>{model.counts[tier.key] || 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="quote-hint">{copy.quote.commercialNote}</p>
+        </section>
+
+        <section className="quote-section quote-scope compact-section">
+          <h3>{copy.quote.scopeTitle}</h3>
+          <ul>
+            {copy.quote.scopeItems.map((item) => <li key={item}>{item}</li>)}
+          </ul>
         </section>
 
         <section className="quote-section quote-features">

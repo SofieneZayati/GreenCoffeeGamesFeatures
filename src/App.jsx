@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { GROUPS } from "./data/features";
+import { GROUPS, TOTAL_FEATURES } from "./data/features";
 import { getCopy, getTranslatedGroups, getTranslatedTiers, normalizeLanguage } from "./data/i18n";
 import { Drawer } from "./components/Drawer";
 import { FeatureGroup } from "./components/FeatureGroup";
 import { Intro } from "./components/Intro";
 import { QuoteView } from "./components/QuoteView";
+import { FilterBar } from "./components/FilterBar";
 import { TopBar } from "./components/TopBar";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { createProposal, STORAGE_KEYS } from "./utils/proposals";
@@ -18,7 +19,7 @@ function Toast({ message }) {
 export default function App() {
   const [selectedIds, setSelectedIds] = useLocalStorage(STORAGE_KEYS.currentSelection, []);
   const [proposals, setProposals] = useLocalStorage(STORAGE_KEYS.savedProposals, []);
-  const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.theme, "light");
+  const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.theme, "dark");
   const [language, setLanguage] = useLocalStorage(STORAGE_KEYS.language, "en");
   const [proposalName, setProposalName] = useState("");
   const [collapsedGroupIds, setCollapsedGroupIds] = useState([]);
@@ -26,6 +27,8 @@ export default function App() {
   const [toast, setToast] = useState("");
   const [activeQuote, setActiveQuote] = useState(null);
   const [languageSwitching, setLanguageSwitching] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tierFilter, setTierFilter] = useState("all");
 
   const safeLanguage = normalizeLanguage(language);
   const copy = useMemo(() => getCopy(safeLanguage), [safeLanguage]);
@@ -33,6 +36,28 @@ export default function App() {
   const translatedTiers = useMemo(() => getTranslatedTiers(safeLanguage), [safeLanguage]);
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
   const collapsedSet = useMemo(() => new Set(collapsedGroupIds), [collapsedGroupIds]);
+  const visibleGroups = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    return translatedGroups
+      .map((group) => {
+        const features = group.features.filter((feature) => {
+          const matchesTier =
+            tierFilter === "all" ||
+            feature.tier === tierFilter ||
+            (tierFilter === "core" && feature.critical) ||
+            (tierFilter === "new" && feature.isNew);
+          const haystack = `${group.label} ${feature.name} ${feature.desc}`.toLowerCase();
+          const matchesSearch = !query || haystack.includes(query);
+          return matchesTier && matchesSearch;
+        });
+        return { ...group, features };
+      })
+      .filter((group) => group.features.length > 0);
+  }, [translatedGroups, searchTerm, tierFilter]);
+  const visibleFeatureCount = useMemo(
+    () => visibleGroups.reduce((total, group) => total + group.features.length, 0),
+    [visibleGroups]
+  );
 
   useEffect(() => {
     const safeTheme = theme === "light" ? "light" : "dark";
@@ -86,17 +111,21 @@ export default function App() {
     });
   }
 
-  function selectAllInGroup(groupId) {
+  function selectAllInGroup(groupId, visibleFeatureIds = null) {
     const group = GROUPS.find((item) => item.id === groupId);
     if (!group) return;
+    const ids = Array.isArray(visibleFeatureIds) && visibleFeatureIds.length
+      ? visibleFeatureIds
+      : group.features.map((feature) => feature.id);
     updateSelection((nextSet) => {
-      const allSelected = group.features.every((feature) => nextSet.has(feature.id));
-      for (const feature of group.features) {
-        if (allSelected) nextSet.delete(feature.id);
-        else nextSet.add(feature.id);
+      const allSelected = ids.every((featureId) => nextSet.has(featureId));
+      for (const featureId of ids) {
+        if (allSelected) nextSet.delete(featureId);
+        else nextSet.add(featureId);
       }
     });
   }
+
 
   function persistProposal(status = "draft") {
     if (selectedIds.length === 0) {
@@ -154,21 +183,38 @@ export default function App() {
         />
         <section className={`language-stage${languageSwitching ? " is-switching" : ""}`} data-language={safeLanguage}>
           <Intro copy={copy} />
+          <FilterBar
+            copy={copy}
+            searchTerm={searchTerm}
+            tierFilter={tierFilter}
+            visibleCount={visibleFeatureCount}
+            totalFeatures={TOTAL_FEATURES}
+            onSearchChange={setSearchTerm}
+            onTierChange={setTierFilter}
+          />
           <div className="left" role="list">
-            {translatedGroups.map((group, index) => (
-              <FeatureGroup
-                key={group.id}
-                group={group}
-                index={index}
-                tiers={translatedTiers}
-                copy={copy}
-                selectedSet={selectedSet}
-                collapsed={collapsedSet.has(group.id)}
-                onToggleFeature={toggleFeature}
-                onToggleGroup={toggleGroup}
-                onSelectAll={selectAllInGroup}
-              />
-            ))}
+            {visibleGroups.length > 0 ? (
+              visibleGroups.map((group, index) => (
+                <FeatureGroup
+                  key={group.id}
+                  group={group}
+                  index={index}
+                  tiers={translatedTiers}
+                  copy={copy}
+                  selectedSet={selectedSet}
+                  collapsed={collapsedSet.has(group.id)}
+                  onToggleFeature={toggleFeature}
+                  onToggleGroup={toggleGroup}
+                  onSelectAll={selectAllInGroup}
+                />
+              ))
+            ) : (
+              <div className="empty-results" role="status">
+                <i className="ti ti-filter-x" aria-hidden="true" />
+                <strong>{copy.filters.emptyTitle}</strong>
+                <span>{copy.filters.emptyCopy}</span>
+              </div>
+            )}
           </div>
           <footer className="creator-credit" aria-label="Project contact">
             <div className="creator-credit-mark" aria-hidden="true">

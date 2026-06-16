@@ -4,7 +4,7 @@ import { getCommercialTiers, getCopy, getLocale, getPackageLabel, getTranslatedG
 export const STORAGE_KEYS = {
   currentSelection: "gc_react_current_selection_v1",
   savedProposals: "gc_react_saved_proposals_v1",
-  theme: "gc_react_theme_v1",
+  theme: "gc_react_theme_v2",
   language: "gc_react_language_v1",
 };
 
@@ -15,7 +15,6 @@ export const COMMERCIAL_TIERS = [
     shortLabel: "Starter",
     price: "1 200 TND",
     minPrice: 1200,
-    timeline: "6 - 8 weeks",
     className: "starter",
   },
   {
@@ -24,7 +23,6 @@ export const COMMERCIAL_TIERS = [
     shortLabel: "Advanced",
     price: "From 2 000 TND",
     minPrice: 2000,
-    timeline: "12 - 16 weeks",
     className: "advanced",
   },
   {
@@ -33,7 +31,6 @@ export const COMMERCIAL_TIERS = [
     shortLabel: "Premium",
     price: "Custom quote",
     minPrice: 0,
-    timeline: "By module",
     className: "premium",
   },
 ];
@@ -179,25 +176,26 @@ export function getCommercialModel(proposal, language = "en") {
   const hasStarter = counts.starter > 0;
   const hasAdvanced = counts.advanced > 0;
   const hasPremium = counts.premium > 0;
-  const minTotal = selectedTiers.reduce((total, tier) => total + (tier.minPrice || 0), 0);
 
-  let realisation = "-";
-  if (hasStarter && hasAdvanced && hasPremium) realisation = language === "fr" ? "18 - 24 semaines + add-ons" : "18 - 24 weeks + add-ons";
-  else if (hasStarter && hasAdvanced) realisation = language === "fr" ? "18 - 24 semaines" : "18 - 24 weeks";
-  else if (hasStarter && hasPremium) realisation = language === "fr" ? "6 - 8 semaines + add-ons" : "6 - 8 weeks + add-ons";
-  else if (hasAdvanced && hasPremium) realisation = language === "fr" ? "12 - 16 semaines + add-ons" : "12 - 16 weeks + add-ons";
-  else if (hasStarter) realisation = copy.packages.starter.timeline;
-  else if (hasAdvanced) realisation = copy.packages.advanced.timeline;
-  else if (hasPremium) realisation = copy.packages.premium.timeline;
+  // Pricing is package-based, not additive. Advanced already includes the Starter baseline,
+  // so selecting Starter + Advanced should not become 1 200 + 2 000.
+  const baseMinPrice = hasAdvanced ? 2000 : hasStarter ? 1200 : 0;
+  const minTotal = baseMinPrice;
+  const addonSuffix = language === "fr" ? " + add-ons" : " + add-ons";
+
+  const estimateMain = !selectedTiers.length
+    ? copy.model.zero
+    : baseMinPrice
+      ? `${baseMinPrice.toLocaleString("fr-FR")} TND${hasPremium ? addonSuffix : ""}`
+      : copy.model.customQuote;
 
   return {
     counts,
     selectedTiers,
     minTotal,
     hasPremium,
-    estimateMain: selectedTiers.length ? (minTotal ? `${minTotal.toLocaleString("fr-FR")} TND` : copy.model.customQuote) : copy.model.zero,
+    estimateMain,
     estimateNote: !selectedTiers.length ? copy.model.noModules : (hasPremium ? copy.model.minimumPlusAddons : copy.model.minimumEstimate),
-    realisation,
     projectType: hasPremium ? copy.model.quoteAddons : copy.model.fixedBaseline,
     total: getProposalFeatures(proposal, language).length,
     categoryCount: getProposalGroups(proposal, language).length,
