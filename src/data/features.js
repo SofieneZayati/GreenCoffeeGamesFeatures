@@ -31,6 +31,15 @@ export const GROUPS = [
     ]
   },
   {
+    id: "activities", label: "Games, kids park & events", icon: "ti-puzzle",
+    features: [
+      { id: "card_games_showcase", tier: "starter", name: "Card games showcase", desc: "Show the card games available at the café so clients know they can come to play", isNew: true },
+      { id: "kids_park_info", tier: "starter", name: "Paid kids park information", desc: "Present the kids park as a paid area with clear access info, rules and optional photos", isNew: true },
+      { id: "football_events_calendar", tier: "advanced", name: "Football events calendar", desc: "Show upcoming big matches, football nights and special café events", isNew: true },
+      { id: "big_match_notifications", tier: "premium", name: "Big match client notifications", desc: "Notify customers before important football games by WhatsApp, email or push so they come watch at the café", isNew: true },
+    ]
+  },
+  {
     id: "simple_reservations", label: "Reservations & notifications", icon: "ti-calendar-plus",
     features: [
       { id: "res_basic", tier: "advanced", name: "Reservation request", desc: "Customer sends name, phone, date, time, guests and optional note — reservation flow is handled as an advanced module", critical: true },
